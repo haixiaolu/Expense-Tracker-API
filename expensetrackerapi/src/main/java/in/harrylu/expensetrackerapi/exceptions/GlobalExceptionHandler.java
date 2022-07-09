@@ -21,8 +21,8 @@ import in.harrylu.expensetrackerapi.entity.ErrorObject;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
-	@ExceptionHandler(ResourseNotFoundException.class)
-	public ResponseEntity<ErrorObject> handleExpenseNotFoundException(ResourseNotFoundException ex, WebRequest request){
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ErrorObject> handleExpenseNotFoundException(ResourceNotFoundException ex, WebRequest request){
 		ErrorObject errorObject = new ErrorObject();
 		
 		errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -61,6 +61,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		eObject.setTimestamp(new Date());
 		
 		return new ResponseEntity<ErrorObject>(eObject, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	
+	@ExceptionHandler(ItemAlreadyExistsException.class)
+	public ResponseEntity<ErrorObject> handleItemExistsException(ItemAlreadyExistsException ex, WebRequest request){
+		ErrorObject errorObject = new ErrorObject();
+		
+		errorObject.setStatusCode(HttpStatus.CONFLICT.value());
+		
+		errorObject.setMessage(ex.getMessage());
+		
+		errorObject.setTimestamp(new Date());
+		
+		return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.CONFLICT);
+	
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 import in.harrylu.expensetrackerapi.entity.Expense;
-import in.harrylu.expensetrackerapi.exceptions.ResourseNotFoundException;
+import in.harrylu.expensetrackerapi.exceptions.ResourceNotFoundException;
 import in.harrylu.expensetrackerapi.repository.ExpenseRepository;
 
 @Service
@@ -32,12 +32,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 		if (expense.isPresent()) {
 			return expense.get();
 		}
-		throw new ResourseNotFoundException("Expense is not found for the id " + id);
+		throw new ResourceNotFoundException("Expense is not found for the id " + id);
 	}
 
 	@Override
 	public void deleteExpenseById(Long id) {
-		expenseRepo.deleteById(id);
+		Expense expense = getExpenseById(id);
+		expenseRepo.delete(expense);
+		
 		
 	}
 
