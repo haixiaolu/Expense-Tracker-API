@@ -1,6 +1,5 @@
 package in.harrylu.expensetrackerapi.entity;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,9 +12,10 @@ public class UserModel {
 
 	@NotBlank(message = "Please enter name")
 	private String name;
+	
+	
 	@NotNull(message = "Please enter email")
 	@Email(message = "Please enter valid email")
-	@Column(unique = true)
 	private String email;
 	
 	
