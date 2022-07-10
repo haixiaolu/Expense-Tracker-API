@@ -20,14 +20,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Autowired
 	private ExpenseRepository expenseRepo;
 	
+	@Autowired
+	private UserService userService;
+	
 	@Override
 	public Page<Expense> getAllExpenses(Pageable page) {
-		return expenseRepo.findAll(page);
+		return expenseRepo.findByUserId(userService.getLoggedInUser().getId(), page);
 	}
 
 	@Override
 	public Expense getExpenseById(Long id){
-		Optional<Expense> expense = expenseRepo.findById(id);
+		Optional<Expense> expense = expenseRepo.findByUserIdAndId(userService.getLoggedInUser().getId(), id);
 		if (expense.isPresent()) {
 			return expense.get();
 		}
@@ -42,6 +45,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public Expense saveExpenseDetails(Expense expense) {
+		expense.setUser(userService.getLoggedInUser());
 		return expenseRepo.save(expense);
 	}
 
@@ -58,12 +62,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public List<Expense> readByCategory(String category, Pageable page) {
-		return expenseRepo.findByCategory(category, page).toList();
+		return expenseRepo.findByUserIdAndCategory(userService.getLoggedInUser().getId(), category, page).toList();
 	}
 
 	@Override
 	public List<Expense> readByName(String keyword, Pageable page) {
-		return expenseRepo.findByNameContaining(keyword, page).toList();
+		return expenseRepo.findByUserIdAndNameContaining(userService.getLoggedInUser().getId(), keyword, page).toList();
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 			endDate = new Date(System.currentTimeMillis());
 		}
 		
-		return expenseRepo.findByDateBetween(startDate, endDate, page).toList();
+		return expenseRepo.findByUserIdAndDateBetween(userService.getLoggedInUser().getId(), startDate, endDate, page).toList();
 	}
 
 }
